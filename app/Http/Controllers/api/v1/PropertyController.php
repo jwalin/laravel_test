@@ -82,3 +82,4 @@ class PropertyController extends Controller
         return $response['results'][0]['geometry']['location'];
     }
 }
+
