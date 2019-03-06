@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Service;
+
+use Httpful\Request;
+
+/**
+ * Moblie application api helper class
+ */
+class GoogleMapService
+{
+    /**
+     * Session key for api request to application server
+     * @var string
+     */
+    private $apiKey;
+
+    public function __construct()
+    {
+        //
+    }
+
+    public function _getLatLong($address)
+    {
+        $response = Request::get(config('gmap.url').'?address='.$address.'&key='.config('gmap.api_key'))
+        ->sendsJson()
+        ->body()
+        ->send();
+
+        return $response->body;
+    }
+
+    public function registerTechnician($data)
+    {
+        return Request::post(config('application.url') . '/api/technician/' .$this->sessionKey. '/register')
+        ->sendsJson()
+        ->body(
+            json_encode([
+                'email' => $data['email'],
+                'firstName' => $data['first_name'],
+                'lastName' => $data['last_name'],
+                'contactNumber' => $data['contact_no'],
+                'uniqueId' => md5($data['email']),
+                'password' => $data['password'],
+            ])
+        )
+        ->send();
+    }
+}
